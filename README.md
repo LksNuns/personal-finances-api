@@ -1,7 +1,11 @@
-# Awesome Project Build with TypeORM
+## Initializes postgres database with docker
 
-Steps to run this project:
+#### Creates a docker container to postgres:
+```
+docker run --name personal_finances_postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+```
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+#### Creates a database:
+```
+docker exec -it personal_finances_postgres createdb -h localhost -U postgres personal_finances_dev
+```

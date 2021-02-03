@@ -1,18 +1,24 @@
 {
-   "synchronize": true,
-   "logging": false,
+   "type": "postgres",
+   "host": "localhost",
+   "port": 5432,
+   "username": "postgres",
+   "password": "docker",
+   "database": "personal_finances_dev",
+   "synchronize": false,
+   "logging": true,
    "entities": [
-      "src/entity/**/*.ts"
+      "src/models/**/*.ts"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "src/config/database/migration/**/*.ts"
    ],
    "subscribers": [
       "src/subscriber/**/*.ts"
    ],
    "cli": {
-      "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
+      "entitiesDir": "src/models",
+      "migrationsDir": "src/config/database/migration",
       "subscribersDir": "src/subscriber"
    }
 }
