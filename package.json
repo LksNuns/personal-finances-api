@@ -26,6 +26,7 @@
    },
    "scripts": {
       "build": "tsc",
+      "test": "jest --runInBand",
       "dev": "ts-node-dev src/index.ts",
       "lint": "eslint ./src ./test --ext .ts",
       "lint:fix": "eslint ./src ./test --ext .ts --fix"
