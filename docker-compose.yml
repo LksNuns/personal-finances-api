@@ -1,0 +1,60 @@
+---
+version: "3.9"
+
+volumes:
+  api_node_modules:
+  db_data:
+
+networks:
+  backend:
+
+# environment variables are read from .env files
+services:
+  api:
+    image: "personal-finances-api:dev"
+    build: .
+    volumes:
+      - .:/app
+      - api_node_modules:/app/node_modules
+
+    env_file:
+      - .env
+
+    environment: # fallback to these default values here
+      NODE_ENV:             "${NODE_ENV:-development}"
+      DATABASE_URL:         "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}"
+      TEST_DATABASE_URL:     "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/personal_finances_test"
+
+    ports:
+      - "${PORT:-3000}:3000"
+      - "9222:9222" # application debug inspector
+      - "9223:9223" # tests debug inspector
+
+    networks:
+      - backend
+
+    depends_on:
+      - db
+
+
+  db:
+    image: postgres:13.1-alpine
+    restart: always
+    env_file:
+      - .env
+
+    environment: # fallback to these default values here
+      PGDATA:               "${POSTGRES_DATA:-/var/lib/postgresql/data}"
+      POSTGRES_INITDB_ARGS: "${POSTGRES_INITDB_ARGS}"
+      POSTGRES_DB:          "${POSTGRES_DB:-personal_finances_dev}"
+      POSTGRES_USER:        "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD:    "${POSTGRES_PASSWORD}" # required
+
+    # ports:
+    #   - "5432:5432"
+
+    volumes:
+      - "db_data:${POSTGRES_DATA:-/var/lib/postgresql/data}"
+
+    networks:
+      - backend
