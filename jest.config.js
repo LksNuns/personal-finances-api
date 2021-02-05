@@ -7,13 +7,14 @@ const root = resolve(__dirname);
 // eslint-disable-next-line no-undef
 module.exports = {
   rootDir: root,
-  displayName: 'root-tests',
-  testMatch: ['<rootDir>/src/**/*.spec.ts'],
+  displayName: 'tests',
+  testMatch: ['<rootDir>/src/**/*.spec.ts', '<rootDir>/test/**/*.spec.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   testEnvironment: 'node',
   clearMocks: true,
   preset: 'ts-jest',
   moduleNameMapper: {
-    '@src/(.*)': '<rootDir>/src/$1',
+    '@/(.*)': '<rootDir>/src/$1',
     '@test/(.*)': '<rootDir>/test/$1',
   },
 };
