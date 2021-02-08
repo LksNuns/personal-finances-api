@@ -40,6 +40,8 @@ export class SetupServer extends Server {
   }
 
   public start(): void {
+    this.init();
+
     this.server = this.app.listen(this.port, () => {
       console.log(`starting server on ${this.port}`);
       // logger.info('Server listening on port: ' + this.port);
