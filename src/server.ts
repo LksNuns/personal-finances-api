@@ -4,8 +4,7 @@ import { Server } from '@overnightjs/core';
 import { Application } from 'express';
 import bodyParser from 'body-parser';
 import * as http from 'http';
-
-import { createConnection } from 'typeorm';
+import database from '../db/database';
 
 import { TransactionsController } from './controllers/transactions';
 
@@ -21,7 +20,7 @@ export class SetupServer extends Server {
    * this way we allow the server to be used in tests and normal initialization
    */
   public async init(): Promise<void> {
-    this.setupDatabase();
+    await this.setupDatabase();
     this.setupExpress();
     this.setupControllers();
   }
@@ -36,16 +35,30 @@ export class SetupServer extends Server {
   }
 
   private async setupDatabase(): Promise<void> {
-    await createConnection();
+    console.log('vai chamar setup de database');
+    await database.createConnection();
   }
 
   public start(): void {
-    this.init();
-
     this.server = this.app.listen(this.port, () => {
       console.log(`starting server on ${this.port}`);
       // logger.info('Server listening on port: ' + this.port);
     });
+  }
+
+  public async close(): Promise<void> {
+    await database.closeConnection();
+
+    if (this.server) {
+      await new Promise((resolve, reject) => {
+        this.server?.close((err) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(true);
+        });
+      });
+    }
   }
 
   public getApp(): Application {

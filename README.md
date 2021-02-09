@@ -1,11 +1,19 @@
 ## Initializes postgres database with docker
 
-#### Creates a docker container to postgres:
+#### Create database:
+
 ```
-docker run --name personal_finances_postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+docker-compose up
+docker-compose exec db createdb -h localhost -U postgres personal_finances_dev
 ```
 
-#### Creates a database:
+#### Drop database:
 ```
-docker exec -it personal_finances_postgres createdb -h localhost -U postgres personal_finances_dev
+docker-compose up
+docker-compose exec db dropdb -h localhost -U postgres --if-exists personal_finances_dev
+```
+
+#### Migrate:
+```
+docker-compose exec app yarn typeorm migration:run
 ```
