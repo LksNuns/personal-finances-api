@@ -1,5 +1,6 @@
 import { SetupServer } from '@/server';
 import supertest from 'supertest';
+import database from '../db/database';
 
 let server: SetupServer;
 
@@ -14,5 +15,5 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // await database.clear();
+  await database.clear();
 });

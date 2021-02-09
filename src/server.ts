@@ -35,7 +35,6 @@ export class SetupServer extends Server {
   }
 
   private async setupDatabase(): Promise<void> {
-    console.log('vai chamar setup de database');
     await database.createConnection();
   }
 

@@ -1,0 +1,9 @@
+{
+  "App": {
+    "port": "APP_PORT",
+    "typeorm": {
+      "username": "POSTGRES_USER",
+      "password": "POSTGRES_PASSWORD"
+    }
+  }
+}
