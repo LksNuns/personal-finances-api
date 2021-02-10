@@ -33,25 +33,14 @@ const database = {
     if (process.env.NODE_ENV !== 'test') return;
 
     const connection = getConnection();
-    const entities = connection.entityMetadatas;
 
-    const entityDeletionPromises = entities.map((entity) => async () => {
-      const repository = connection.getRepository(entity.name);
-      await repository.query(`TRUNCATE ${entity.tableName} CASCADE`);
-    });
+    const entityTableNames = connection.entityMetadatas
+      .map((entity) => entity.tableName)
+      .join(', ');
 
-    await Promise.all(entityDeletionPromises);
-
-    // TOOD We need try the code below more efficient (?)
-    // const connection = getConnection();
-    // const entities = connection.entityMetadatas;
-
-    // const allEntitiesName = entities
-    //   .map((entity) => entity.tableName)
-    //   .join(',');
-    // // See TURNCATE option at https://www.postgresql.org/docs/current/sql-truncate.html
-    // // from https://stackoverflow.com/a/25183902
-    // await connection.query(`TRUNCATE ${allEntitiesName}`);
+    // See TURNCATE at https://www.postgresql.org/docs/current/sql-truncate.html
+    // from https://stackoverflow.com/a/25183902
+    await connection.manager.query(`TRUNCATE ${entityTableNames} CASCADE`);
   },
 };
 
