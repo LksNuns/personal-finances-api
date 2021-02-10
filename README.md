@@ -1,13 +1,12 @@
-### Finances Project
-It is a simple API project to organizer your own personal finances.
-The motivation to creates this project is to test some libs and technologies.
-
+### Personal Finances Project
+It is a simple API project to organize your own personal finances.
+The motivation for the development of this project is to test some libs/structures/technologies and prove my knowledge in practice
 
 ### How to Run (development)
 To run this project we can use `docker-compose`
 
 ##### Create `.env`
-Fist we need to creates and populate `.env` file (just copy `.env.sample` and define some variables)
+First we need to creates and populate `.env` file (just copy `.env.sample` and define some variables)
 
 ##### Startup application
 ```
@@ -26,8 +25,8 @@ docker-compose exec app yarn typeorm migration:run
 
 ### Test application
 We have 2 endpoints:
-`GET /transactions` - list all transactions created
-`POST /transactions` - Creates a transaction
+- `GET /transactions` - list all transactions created
+- `POST /transactions` - Creates a transaction
 
 
 ### Next steps:
