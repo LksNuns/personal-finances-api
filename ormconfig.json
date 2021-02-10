@@ -1,24 +1,52 @@
-{
-   "type": "postgres",
-   "host": "db",
-   "port": 5432,
-   "username": "postgres",
-   "password": "docker",
-   "database": "personal_finances_dev",
-   "synchronize": false,
-   "logging": true,
-   "entities": [
-      "src/entities/**/*.ts"
-   ],
-   "migrations": [
-      "db/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "src/subscriber/**/*.ts"
-   ],
-   "cli": {
-      "entitiesDir": "src/models",
-      "migrationsDir": "db/migration",
-      "subscribersDir": "src/subscriber"
+[
+   {
+      "name": "default",
+      "type": "postgres",
+      "host": "db",
+      "port": 5432,
+      "username": "postgres",
+      "password": "docker",
+      "database": "personal_finances_dev",
+      "synchronize": false,
+      "logging": true,
+      "entities": [
+         "src/entities/**/*.ts"
+      ],
+      "migrations": [
+         "db/migration/**/*.ts"
+      ],
+      "subscribers": [
+         "src/subscriber/**/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "src/models",
+         "migrationsDir": "db/migration",
+         "subscribersDir": "src/subscriber"
+      }
+   },
+   {
+      "name": "test",
+      "type": "postgres",
+      "host": "db",
+      "port": 5432,
+      "username": "postgres",
+      "password": "docker",
+      "database": "personal_finances_test",
+      "synchronize": false,
+      "logging": true,
+      "entities": [
+         "src/entities/**/*.ts"
+      ],
+      "migrations": [
+         "db/migration/**/*.ts"
+      ],
+      "subscribers": [
+         "src/subscriber/**/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "src/models",
+         "migrationsDir": "db/migration",
+         "subscribersDir": "src/subscriber"
+      }
    }
-}
+]
