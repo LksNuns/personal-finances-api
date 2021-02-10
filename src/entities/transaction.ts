@@ -31,7 +31,7 @@ export class Transaction {
 
   @IsNotEmpty()
   @Column({ type: 'date' })
-  executed_at: Date;
+  executedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;

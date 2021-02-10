@@ -3,6 +3,7 @@ import { createConnection, getConnection } from 'typeorm';
 import config from 'config';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import path from 'path';
+import NamingStrategy from './naming-strategy';
 
 type ConnectionConfig = Partial<PostgresConnectionOptions>;
 
@@ -18,6 +19,7 @@ const database = {
       host: 'db',
       port: 5432,
       synchronize: false,
+      namingStrategy: new NamingStrategy(),
       entities: [path.join(ROOT_DIR, 'src/entities/**/*.ts')],
     });
   },
