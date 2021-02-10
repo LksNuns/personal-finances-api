@@ -27,8 +27,6 @@ services:
 
     ports:
       - "${PORT:-3000}:3000"
-      - "9222:9222" # application debug inspector
-      - "9223:9223" # tests debug inspector
 
     networks:
       - backend
