@@ -47,7 +47,7 @@ describe('/transactions', () => {
           executedAt: '2020-09-09',
         };
 
-        // // Sanity check
+        // Sanity check
         expect(await transactionRepository.count()).toBe(0);
 
         const response = await global.testRequest
@@ -59,6 +59,27 @@ describe('/transactions', () => {
 
         // find first
         // expect return serialized finded transaction
+      });
+    });
+
+    describe('with invalid params', () => {
+      it('return entity errors', async () => {
+        const params = {
+          description: 'Valid description',
+          // type: 'income',
+          value: 20.44,
+          executedAt: '2020-09-09',
+        };
+
+        const response = await global.testRequest
+          .post('/transactions')
+          .send(params);
+
+        expect(response.status).toBe(422);
+        expect(response.body.errors).toMatchObject([{ property: 'type' }]);
+
+        // Sanity check
+        expect(await transactionRepository.count()).toBe(0);
       });
     });
   });

@@ -1,5 +1,7 @@
 import { CreateTransactionDto } from '@/dto/create-transaction.dto';
+import { Transaction } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
+import { UnprocessableEntityError } from '@/utils/errors/unprocessable-entity-error';
 import { Body, Post, JsonController, Get } from 'routing-controllers';
 import { getCustomRepository } from 'typeorm';
 
@@ -12,19 +14,18 @@ export class TransactionsController {
   }
 
   @Get('')
-  public async index(): Promise<any> {
+  public async index(): Promise<Transaction[]> {
     return this.transactionRepository.findAll();
   }
 
   @Post('')
-  public async create(@Body() data: CreateTransactionDto): Promise<any> {
+  public async create(
+    @Body({ validate: false }) data: CreateTransactionDto
+  ): Promise<Transaction> {
     try {
-      await this.transactionRepository.create(data);
+      return await this.transactionRepository.create(data);
     } catch (error) {
-      console.log(error);
-      // TODO Define errors
+      throw new UnprocessableEntityError(error);
     }
-
-    return { ok: 'ok' };
   }
 }

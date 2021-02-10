@@ -8,7 +8,7 @@ interface TransactionData {
   description: string;
   value: number;
   type: TypeEnum;
-  executed_at: number;
+  executedAt: string;
 }
 
 describe('models/transactions', () => {
@@ -21,7 +21,7 @@ describe('models/transactions', () => {
       description: 'First transaction',
       value: 10.2,
       type: TypeEnum.income,
-      executed_at: Date.now(),
+      executedAt: '2020-10-10',
     };
   });
 

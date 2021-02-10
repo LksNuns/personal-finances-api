@@ -21,11 +21,12 @@ describe('TransactionRepository', () => {
       });
 
       it('returns an error', async () => {
-        // TODO Afeter creating specific errors to validation fail,
-        // we need changes this expect, avoiding toMatchSnapshot()
         await expect(
           repository.create(params as CreateTransactionDto)
-        ).rejects.toMatchSnapshot();
+        ).rejects.toMatchObject([
+          { property: 'type' },
+          { property: 'executedAt' },
+        ]);
       });
     });
 
