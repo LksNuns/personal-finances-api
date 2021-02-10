@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionRepository #create with invalid params returns an error 1`] = `
+Array [
+  ValidationError {
+    "children": Array [],
+    "constraints": Object {
+      "isNotEmpty": "type should not be empty",
+    },
+    "property": "type",
+    "target": Transaction {
+      "value": 22,
+    },
+    "value": undefined,
+  },
+  ValidationError {
+    "children": Array [],
+    "constraints": Object {
+      "isNotEmpty": "executedAt should not be empty",
+    },
+    "property": "executedAt",
+    "target": Transaction {
+      "value": 22,
+    },
+    "value": undefined,
+  },
+]
+`;
+
+exports[`TransactionRepository #create with valid params returns an error 1`] = `
+Array [
+  ValidationError {
+    "children": Array [],
+    "constraints": Object {
+      "isNotEmpty": "type should not be empty",
+    },
+    "property": "type",
+    "target": Transaction {
+      "value": 22,
+    },
+    "value": undefined,
+  },
+  ValidationError {
+    "children": Array [],
+    "constraints": Object {
+      "isNotEmpty": "executedAt should not be empty",
+    },
+    "property": "executedAt",
+    "target": Transaction {
+      "value": 22,
+    },
+    "value": undefined,
+  },
+]
+`;

@@ -15,11 +15,11 @@ export class CreateTransactions1612795303895 implements MigrationInterface {
           },
           {
             name: 'description',
-            isNullable: false,
+            isNullable: true,
             type: 'varchar',
           },
           {
-            name: 'price',
+            name: 'value',
             type: 'decimal',
             precision: 10,
             scale: 2,

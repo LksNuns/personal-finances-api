@@ -1,6 +1,5 @@
 import '../module-alias.config';
 
-import { Server } from '@overnightjs/core';
 import { default as express, Application } from 'express';
 import bodyParser from 'body-parser';
 import * as http from 'http';
