@@ -1,10 +1,11 @@
-import { Controller, Get } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import { CreateTransactionDto } from '@/dto/create-transaction.dto';
+import { Body, Post, JsonController } from 'routing-controllers';
 
-@Controller('transactions')
+@JsonController('/transactions')
 export class TransactionsController {
-  @Get('')
-  public index(_: Request, res: Response): void {
-    res.send({ ok: 'ok' });
+  @Post('')
+  public create(@Body() data: CreateTransactionDto): any {
+    console.log(data);
+    return { ok: 'ok' };
   }
 }

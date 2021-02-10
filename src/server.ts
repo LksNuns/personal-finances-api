@@ -1,18 +1,20 @@
 import '../module-alias.config';
 
 import { Server } from '@overnightjs/core';
-import { Application } from 'express';
+import { default as express, Application } from 'express';
 import bodyParser from 'body-parser';
 import * as http from 'http';
 import database from '../db/database';
 
 import { TransactionsController } from './controllers/transactions';
+import { useExpressServer } from 'routing-controllers';
 
-export class SetupServer extends Server {
+export class SetupServer {
+  private readonly app: Application;
   private server?: http.Server;
 
   constructor(private port = 3000) {
-    super();
+    this.app = express();
   }
 
   /*
@@ -30,8 +32,9 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const transactionController = new TransactionsController();
-    this.addControllers([transactionController]);
+    useExpressServer(this.app, {
+      controllers: [TransactionsController],
+    });
   }
 
   private async setupDatabase(): Promise<void> {
