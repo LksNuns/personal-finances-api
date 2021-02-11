@@ -147,4 +147,31 @@ describe('/transactions', () => {
       });
     });
   });
+
+  describe('#show', () => {
+    let transaction: Transaction;
+
+    beforeEach(async () => {
+      // TODO Adding factory-girl to improve.
+      transaction = await transactionRepository.create({
+        description: 'Shopping',
+        type: TypeEnum.outcome,
+        value: 20.44,
+        executedAt: '2020-09-09',
+      });
+    });
+
+    describe('with valid transaction id', () => {
+      it('return transcation', async () => {
+        const response = await global.testRequest.get(
+          `/transactions/${transaction.id}`
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          value: 20.44,
+        });
+      });
+    });
+  });
 });

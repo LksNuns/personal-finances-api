@@ -1,3 +1,4 @@
+import { RepositoryResourceNotFound } from '@/utils/errors/repository-errors/repository-resource-not-found';
 import { ValidationError } from 'class-validator';
 import {
   AbstractRepository,
@@ -32,8 +33,17 @@ export class Base<Entity> extends AbstractRepository<Entity> {
     return await this.repository.findOne(id);
   }
 
-  async destroy(id: string): Promise<Entity | undefined> {
-    const resource = await this.repository.findOne(id);
+  async destroy(id: string): Promise<Entity> {
+    let resource: Entity | undefined;
+    try {
+      resource = await this.repository.findOne(id);
+    } catch (error) {
+      return Promise.reject(new RepositoryResourceNotFound(id));
+    }
+
+    if (!resource) {
+      return Promise.reject(new RepositoryResourceNotFound(id));
+    }
 
     await this.repository.delete(id);
 

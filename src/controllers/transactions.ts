@@ -9,6 +9,7 @@ import {
   JsonController,
   Get,
   Patch,
+  Delete,
   Param,
   NotFoundError,
   InternalServerError,
@@ -54,6 +55,21 @@ export class TransactionsController {
       } else {
         throw new InternalServerError('internal error');
       }
+    }
+  }
+
+  @Get('/:id')
+  public async show(@Param('id') id: string): Promise<Transaction> {
+    try {
+      const transaction = await this.transactionRepository.findById(id);
+
+      if (!transaction) {
+        throw new NotFoundError();
+      }
+
+      return transaction;
+    } catch (error) {
+      throw new InternalServerError('internal error');
     }
   }
 }
