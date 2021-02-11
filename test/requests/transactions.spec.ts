@@ -1,5 +1,6 @@
 import { Transaction, TypeEnum } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
+import { RepositoryErrorType } from '@/utils/errors/repository-errors/repository-error';
 import { getCustomRepository } from 'typeorm';
 
 describe('/transactions', () => {
@@ -76,7 +77,10 @@ describe('/transactions', () => {
           .send(params);
 
         expect(response.status).toBe(422);
-        expect(response.body.errors).toMatchObject([{ property: 'type' }]);
+        expect(response.body.errors).toMatchObject({
+          type: RepositoryErrorType.InvalidParams,
+          errors: [{ property: 'type' }],
+        });
 
         // Sanity check
         expect(await transactionRepository.count()).toBe(0);
@@ -134,7 +138,10 @@ describe('/transactions', () => {
         );
 
         expect(response.status).toBe(422);
-        expect(response.body.errors).toMatchObject([{ property: 'value' }]);
+        expect(response.body.errors).toMatchObject({
+          type: RepositoryErrorType.InvalidParams,
+          errors: [{ property: 'value' }],
+        });
         expect(updatedTransaction?.value).toBe(transaction.value);
         expect(updatedTransaction?.description).toBe(transaction.description);
       });

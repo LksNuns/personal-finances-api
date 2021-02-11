@@ -1,6 +1,7 @@
 import { CreateTransactionDto } from '@/dto/create-transaction.dto';
 import { Transaction } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
+import { RepositoryErrorType } from '@/utils/errors/repository-errors/repository-error';
 import { UnprocessableEntityError } from '@/utils/errors/unprocessable-entity-error';
 import {
   Body,
@@ -9,6 +10,8 @@ import {
   Get,
   Patch,
   Param,
+  NotFoundError,
+  InternalServerError,
 } from 'routing-controllers';
 import { getCustomRepository } from 'typeorm';
 
@@ -44,7 +47,13 @@ export class TransactionsController {
     try {
       return await this.transactionRepository.update(id, data);
     } catch (error) {
-      throw new UnprocessableEntityError(error);
+      if (error?.type === RepositoryErrorType.InvalidParams) {
+        throw new UnprocessableEntityError(error);
+      } else if (error?.type === RepositoryErrorType.NotFound) {
+        throw new NotFoundError();
+      } else {
+        throw new InternalServerError('internal error');
+      }
     }
   }
 }
