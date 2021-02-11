@@ -1,5 +1,5 @@
 import { CreateTransactionDto } from '@/dto/create-transaction.dto';
-import { TypeEnum } from '@/entities/transaction';
+import { Transaction, TypeEnum } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
 import { getCustomRepository } from 'typeorm';
 
@@ -50,6 +50,52 @@ describe('TransactionRepository', () => {
 
         expect(await repository.count()).toBe(1);
         expect(transaction).toMatchObject({ value: 22.0 });
+      });
+    });
+  });
+
+  describe('#update', () => {
+    // Partial to permit invalid params
+    let params: Partial<CreateTransactionDto>;
+    let transaction: Transaction;
+
+    beforeEach(async () => {
+      // TODO Adding factory-girl to improve.
+      transaction = await repository.create({
+        description: 'Shopping',
+        type: TypeEnum.outcome,
+        value: 20.44,
+        executedAt: '2020-09-09',
+      });
+    });
+
+    describe('with invalid params', () => {
+      beforeEach(() => {
+        params = { value: undefined };
+      });
+
+      it('returns an error', async () => {
+        await expect(
+          repository.update(transaction.id, params as CreateTransactionDto)
+        ).rejects.toMatchObject([{ property: 'value' }]);
+      });
+    });
+
+    describe('with valid params', () => {
+      beforeEach(() => {
+        params = {
+          value: 10.0,
+        };
+      });
+
+      it('updates transaction values', async () => {
+        // TODO Should we mock `respository.save()` to avoid using database (?)
+        const updatedTransaction = await repository.update(
+          transaction.id,
+          params as CreateTransactionDto
+        );
+
+        expect(updatedTransaction).toMatchObject({ value: 10.0 });
       });
     });
   });

@@ -1,4 +1,4 @@
-import { TypeEnum } from '@/entities/transaction';
+import { Transaction, TypeEnum } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
 import { getCustomRepository } from 'typeorm';
 
@@ -80,6 +80,63 @@ describe('/transactions', () => {
 
         // Sanity check
         expect(await transactionRepository.count()).toBe(0);
+      });
+    });
+  });
+
+  describe('#update', () => {
+    let transaction: Transaction;
+
+    beforeEach(async () => {
+      // TODO Adding factory-girl to improve.
+      transaction = await transactionRepository.create({
+        description: 'Shopping',
+        type: TypeEnum.outcome,
+        value: 20.44,
+        executedAt: '2020-09-09',
+      });
+    });
+
+    describe('with valid params', () => {
+      it('updates transaction', async () => {
+        const params = {
+          description: 'Changed Description',
+          value: 10.55,
+        };
+
+        const response = await global.testRequest
+          .patch(`/transactions/${transaction.id}`)
+          .send(params);
+
+        const updatedTransaction = await transactionRepository.findById(
+          transaction.id
+        );
+
+        expect(response.status).toBe(200);
+        expect(updatedTransaction?.value).toBe(10.55);
+        expect(updatedTransaction?.description).toBe('Changed Description');
+      });
+    });
+
+    describe('with invalid params', () => {
+      it('return entity errors', async () => {
+        const params = {
+          description: 'Valid description',
+          value: null,
+        };
+
+        const response = await global.testRequest
+          .patch(`/transactions/${transaction.id}`)
+          .send(params);
+
+        const updatedTransaction = await transactionRepository.findById(
+          transaction.id
+        );
+
+        expect(response.status).toBe(422);
+        expect(response.body.errors).toMatchObject([{ property: 'value' }]);
+        expect(updatedTransaction?.value).toBe(transaction.value);
+        expect(updatedTransaction?.description).toBe(transaction.description);
       });
     });
   });

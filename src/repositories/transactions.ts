@@ -14,11 +14,34 @@ export class TransactionRepository extends Base<Transaction> {
     const errors = await validate(transaction);
 
     if (errors.length > 0) {
-      return Promise.reject(this.parseClassValidatorErrors(errors));
+      return Promise.reject(this.parseValidatorErrors(errors));
     }
 
     await this.repository.save(transaction);
 
     return Promise.resolve(transaction);
+  }
+
+  async update(
+    id: string,
+    data: Partial<CreateTransactionDto>
+  ): Promise<Transaction> {
+    const transaction = await this.repository.findOne(id);
+
+    const updatedTransaction = this.repository.create({
+      ...transaction,
+      ...data,
+    });
+
+    // TODO Extract `validate` to Base
+    const errors = await validate(updatedTransaction);
+
+    if (errors.length > 0) {
+      return Promise.reject(this.parseValidatorErrors(errors));
+    }
+
+    await this.repository.save(updatedTransaction);
+
+    return updatedTransaction;
   }
 }

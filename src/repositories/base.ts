@@ -1,4 +1,4 @@
-import { validate, ValidationError } from 'class-validator';
+import { ValidationError } from 'class-validator';
 import {
   AbstractRepository,
   FindManyOptions,
@@ -44,7 +44,7 @@ export class Base<Entity> extends AbstractRepository<Entity> {
     return this.repository.count(options);
   }
 
-  public parseClassValidatorErrors(
+  public parseValidatorErrors(
     errors: ValidationError[]
   ): EntityValidationError[] {
     return errors.map((error) => {
