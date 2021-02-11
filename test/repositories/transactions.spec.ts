@@ -1,6 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
 import { CreateTransactionDto } from '@/dto/create-transaction.dto';
 import { Transaction, TypeEnum } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
+import { RepositoryErrorType } from '@/utils/errors/repository-errors/repository-error';
 import { getCustomRepository } from 'typeorm';
 
 describe('TransactionRepository', () => {
@@ -21,12 +23,16 @@ describe('TransactionRepository', () => {
       });
 
       it('returns an error', async () => {
-        await expect(
-          repository.create(params as CreateTransactionDto)
-        ).rejects.toMatchObject([
-          { property: 'type' },
-          { property: 'executedAt' },
-        ]);
+        expect.assertions(2);
+        try {
+          await repository.create(params as CreateTransactionDto);
+        } catch (error) {
+          expect(error.type).toEqual(RepositoryErrorType.InvalidParams);
+          expect(error.errors).toMatchObject([
+            { property: 'type' },
+            { property: 'executedAt' },
+          ]);
+        }
       });
     });
 
@@ -60,12 +66,37 @@ describe('TransactionRepository', () => {
     let transaction: Transaction;
 
     beforeEach(async () => {
-      // TODO Adding factory-girl to improve.
+      // TODO Adding factory-girl to imRepositoryResourceNotFound
       transaction = await repository.create({
         description: 'Shopping',
         type: TypeEnum.outcome,
         value: 20.44,
         executedAt: '2020-09-09',
+      });
+    });
+
+    describe('with invalid uuid id', () => {
+      it('returns not found error', async () => {
+        const invalidId = uuidv4();
+        await expect(
+          repository.update(invalidId, params as CreateTransactionDto)
+        ).rejects.toMatchObject({
+          type: RepositoryErrorType.NotFound,
+          id: invalidId,
+        });
+      });
+    });
+
+    describe('with invalid id', () => {
+      it('returns not found error', async () => {
+        const invalidId = 'invalid-uuid';
+
+        await expect(
+          repository.update(invalidId, params as CreateTransactionDto)
+        ).rejects.toMatchObject({
+          type: RepositoryErrorType.NotFound,
+          id: invalidId,
+        });
       });
     });
 
@@ -77,7 +108,10 @@ describe('TransactionRepository', () => {
       it('returns an error', async () => {
         await expect(
           repository.update(transaction.id, params as CreateTransactionDto)
-        ).rejects.toMatchObject([{ property: 'value' }]);
+        ).rejects.toMatchObject({
+          type: RepositoryErrorType.InvalidParams,
+          errors: [{ property: 'value' }],
+        });
       });
     });
 
