@@ -8,6 +8,15 @@ import database from '../db/database';
 import { TransactionsController } from './controllers/transactions';
 import { useExpressServer } from 'routing-controllers';
 
+import { types } from 'pg';
+
+// TODO Extract to a specific initializer
+// Necessary to convert decimal values as number
+//github.com/typeorm/typeorm/issues/1875#issuecomment-731518342
+types.setTypeParser(types.builtins.NUMERIC, (value: string): number =>
+  parseFloat(value)
+);
+
 export class SetupServer {
   private readonly app: Application;
   private server?: http.Server;
