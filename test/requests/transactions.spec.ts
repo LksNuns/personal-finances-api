@@ -2,6 +2,7 @@ import { Transaction, TypeEnum } from '@/entities/transaction';
 import { TransactionRepository } from '@/repositories/transactions';
 import { RepositoryErrorType } from '@/utils/errors/repository-errors/repository-error';
 import { getCustomRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('/transactions', () => {
   let transactionRepository: TransactionRepository;
@@ -171,6 +172,17 @@ describe('/transactions', () => {
         expect(response.body).toMatchObject({
           value: 20.44,
         });
+      });
+    });
+
+    describe('with invalid id', () => {
+      it('return 404', async () => {
+        const invalidId = uuidv4();
+        const response = await global.testRequest.get(
+          `/transactions/${invalidId}`
+        );
+
+        expect(response.status).toBe(404);
       });
     });
   });

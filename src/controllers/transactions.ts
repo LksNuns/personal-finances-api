@@ -15,12 +15,14 @@ import {
   InternalServerError,
 } from 'routing-controllers';
 import { getCustomRepository } from 'typeorm';
+import { BaseController } from './base-controller';
 
 @JsonController('/transactions')
-export class TransactionsController {
+export class TransactionsController extends BaseController {
   private readonly transactionRepository: TransactionRepository;
 
   constructor() {
+    super();
     this.transactionRepository = getCustomRepository(TransactionRepository);
   }
 
@@ -36,7 +38,7 @@ export class TransactionsController {
     try {
       return await this.transactionRepository.create(data);
     } catch (error) {
-      throw new UnprocessableEntityError(error);
+      throw this.invalidResourceErrorResponse(error);
     }
   }
 
@@ -48,28 +50,16 @@ export class TransactionsController {
     try {
       return await this.transactionRepository.update(id, data);
     } catch (error) {
-      if (error?.type === RepositoryErrorType.InvalidParams) {
-        throw new UnprocessableEntityError(error);
-      } else if (error?.type === RepositoryErrorType.NotFound) {
-        throw new NotFoundError();
-      } else {
-        throw new InternalServerError('internal error');
-      }
+      throw this.invalidResourceErrorResponse(error);
     }
   }
 
   @Get('/:id')
-  public async show(@Param('id') id: string): Promise<Transaction> {
+  public async show(@Param('id') id: string): Promise<Transaction | undefined> {
     try {
-      const transaction = await this.transactionRepository.findById(id);
-
-      if (!transaction) {
-        throw new NotFoundError();
-      }
-
-      return transaction;
+      return await this.transactionRepository.findById(id);
     } catch (error) {
-      throw new InternalServerError('internal error');
+      throw this.invalidResourceErrorResponse(error);
     }
   }
 }
